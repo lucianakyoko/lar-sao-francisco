@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Animal, AnimalDocument } from './schema/animal.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -17,5 +17,14 @@ export class AnimalService {
 
   async findAll(): Promise<Animal[]> {
     return this.animalModel.find().exec();
+  }
+
+  async findOne(id: string): Promise<Animal | null> {
+    const animal = await this.animalModel.findById(id).exec();
+    if (!animal) {
+      throw new NotFoundException('Animal not found');
+    }
+
+    return animal;
   }
 }

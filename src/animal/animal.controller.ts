@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AnimalService } from './animal.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { Animal } from './schema/animal.schema';
@@ -15,5 +15,10 @@ export class AnimalController {
   @Get()
   async findAll() {
     return this.animalService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Animal | null> {
+    return this.animalService.findOne(id);
   }
 }
