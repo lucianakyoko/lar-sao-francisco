@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 export type AnimalDocument = Animal & Document;
 export interface NeedItem {
-  _id: ObjectId;
+  _id?: ObjectId;
   image: string;
   name: string;
   price: number;

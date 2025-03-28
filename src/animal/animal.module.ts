@@ -10,5 +10,6 @@ import { Animal, AnimalSchema } from './schema/animal.schema';
   ],
   controllers: [AnimalController],
   providers: [AnimalService],
+  exports: [MongooseModule],
 })
 export class AnimalModule {}
