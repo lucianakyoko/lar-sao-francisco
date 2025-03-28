@@ -39,8 +39,9 @@ export class UpdateAnimalDto {
   personality?: string;
 
   @IsOptional()
-  @IsEnum(['small', 'medium', 'big'], {
-    message: 'size must be one of the following values: small, medium or big',
+  @IsEnum(['pequeno', 'médio', 'grande'], {
+    message:
+      'size must be one of the following values: pequeno, médio or grande',
   })
   size?: string;
 

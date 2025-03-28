@@ -7,6 +7,7 @@ import {
   IsArray,
   ValidateNested,
   IsNumber,
+  IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -39,8 +40,9 @@ export class CreateAnimalDto {
   personality: string;
 
   @IsNotEmpty()
-  @IsEnum(['small', 'medium', 'big'], {
-    message: 'size must be one of the following values: small, medium or big',
+  @IsEnum(['pequeno', 'médio', 'grande'], {
+    message:
+      'size must be one of the following values: pequeno, médio or grande',
   })
   size: string;
 
@@ -52,10 +54,11 @@ export class CreateAnimalDto {
   @IsBoolean()
   neutered: boolean;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => NeedItemDto)
-  needsList: NeedItemDto[];
+  needsList?: NeedItemDto[];
 
   @IsNotEmpty()
   @IsString()
