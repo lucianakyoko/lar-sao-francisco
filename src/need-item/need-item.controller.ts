@@ -19,4 +19,12 @@ export class NeedItemController {
   async getAllNeedItems(@Param('id') animalId: string): Promise<NeedItemDto[]> {
     return this.needItemService.getAllNeedItems(animalId);
   }
+
+  @Get(':needId')
+  async getOne(
+    @Param('id') animalId: string,
+    @Param('needId') needId: string,
+  ): Promise<NeedItemDto> {
+    return this.needItemService.getOne(animalId, needId);
+  }
 }

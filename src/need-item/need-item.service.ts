@@ -37,4 +37,16 @@ export class NeedItemService {
 
     return animal.needsList;
   }
+
+  async getOne(animalId: string, needId: string): Promise<NeedItemDto> {
+    const animal = await this.animalModel.findById(animalId);
+    if (!animal) throw new NotFoundException('Animal not found');
+
+    const needItem = animal.needsList.find(
+      (item) => item?._id?.toString() === needId,
+    );
+    if (!needItem) throw new NotFoundException('Need item not found');
+
+    return needItem;
+  }
 }
