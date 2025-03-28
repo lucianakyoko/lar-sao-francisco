@@ -14,4 +14,8 @@ export class AnimalService {
     const newAnimal = new this.animalModel(CreateAnimalDto);
     return newAnimal.save();
   }
+
+  async findAll(): Promise<Animal[]> {
+    return this.animalModel.find().exec();
+  }
 }
