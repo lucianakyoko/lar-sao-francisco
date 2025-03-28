@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { AnimalService } from './animal.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { Animal } from './schema/animal.schema';
@@ -29,5 +37,10 @@ export class AnimalController {
     @Body() updateAnimalDto: UpdateAnimalDto,
   ): Promise<Animal> {
     return this.animalService.update(id, updateAnimalDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<Animal> {
+    return this.animalService.delete(id);
   }
 }

@@ -40,4 +40,13 @@ export class AnimalService {
 
     return updatedAnimal;
   }
+
+  async delete(id: string): Promise<Animal> {
+    const animal = await this.animalModel.findByIdAndDelete(id).exec();
+    if (!animal) {
+      throw new NotFoundException('Animal not found');
+    }
+
+    return animal;
+  }
 }
