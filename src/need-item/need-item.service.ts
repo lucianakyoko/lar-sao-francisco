@@ -88,4 +88,26 @@ export class NeedItemService {
       image: updatedNeedItem.image,
     };
   }
+
+  async removeNeedItem(animalId: string, needId: string): Promise<NeedItemDto> {
+    const animal = await this.animalModel.findById(animalId);
+    if (!animal) throw new NotFoundException('Animal not found');
+
+    const needItem = animal.needsList.find(
+      (item) => item._id && item._id.toString() === needId,
+    );
+    if (!needItem) throw new NotFoundException('Need item not found');
+
+    animal.needsList = animal.needsList.filter(
+      (item) => item._id && item._id.toString() !== needId,
+    );
+
+    await animal.save();
+
+    return {
+      image: needItem.image,
+      name: needItem.name,
+      price: needItem.price,
+    };
+  }
 }

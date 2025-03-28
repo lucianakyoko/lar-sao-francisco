@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { NeedItemDto } from './dto/need-item.dto';
 import { Animal } from '../animal/schema/animal.schema';
 import { NeedItemService } from './need-item.service';
@@ -40,5 +48,13 @@ export class NeedItemController {
       needId,
       updateNeedItemDto,
     );
+  }
+
+  @Delete(':itemId')
+  async removeNeedItem(
+    @Param('id') animalId: string,
+    @Param('itemId') itemId: string,
+  ) {
+    return this.needItemService.removeNeedItem(animalId, itemId);
   }
 }
