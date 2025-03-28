@@ -30,4 +30,11 @@ export class NeedItemService {
     animal.needsList.push(needItemDto);
     return animal.save();
   }
+
+  async getAllNeedItems(animalId: string): Promise<NeedItemDto[]> {
+    const animal = await this.animalModel.findById(animalId);
+    if (!animal) throw new NotFoundException('Animal not found');
+
+    return animal.needsList;
+  }
 }

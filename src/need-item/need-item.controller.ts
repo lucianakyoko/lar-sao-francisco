@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { NeedItemDto } from './dto/need-item.dto';
 import { Animal } from '../animal/schema/animal.schema';
 import { NeedItemService } from './need-item.service';
@@ -13,5 +13,10 @@ export class NeedItemController {
     @Body() needItemDto: NeedItemDto,
   ): Promise<Animal> {
     return this.needItemService.addNeedItem(animalId, needItemDto);
+  }
+
+  @Get()
+  async getAllNeedItems(@Param('id') animalId: string): Promise<NeedItemDto[]> {
+    return this.needItemService.getAllNeedItems(animalId);
   }
 }
