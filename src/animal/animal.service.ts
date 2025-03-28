@@ -3,6 +3,7 @@ import { Animal, AnimalDocument } from './schema/animal.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateAnimalDto } from './dto/create-animal.dto';
+import { UpdateAnimalDto } from './dto/update-animal.dto';
 
 @Injectable()
 export class AnimalService {
@@ -26,5 +27,17 @@ export class AnimalService {
     }
 
     return animal;
+  }
+
+  async update(id: string, updateAnimalDto: UpdateAnimalDto): Promise<Animal> {
+    const updatedAnimal = await this.animalModel
+      .findByIdAndUpdate(id, updateAnimalDto, { new: true })
+      .exec();
+
+    if (!updatedAnimal) {
+      throw new NotFoundException('Animal not found');
+    }
+
+    return updatedAnimal;
   }
 }
