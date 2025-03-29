@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 export type AnimalDocument = Animal & Document;
 export interface NeedItem {
-  _id: ObjectId;
+  _id?: ObjectId;
   image: string;
   name: string;
   price: number;
@@ -21,7 +21,7 @@ export class Animal {
   @Prop({ required: true })
   personality: string;
 
-  @Prop({ required: true, enum: ['small', 'medium', 'big'] })
+  @Prop({ required: true, enum: ['pequeno', 'médio', 'grande'] })
   size: string;
 
   @Prop({ required: true })
@@ -30,7 +30,7 @@ export class Animal {
   @Prop({ required: true })
   neutered: boolean;
 
-  @Prop({ type: [{ image: String, name: String, price: Number }] })
+  @Prop({ type: [{ image: String, name: String, price: Number }], default: [] })
   needsList: NeedItem[];
 
   @Prop({ required: true })
