@@ -14,4 +14,11 @@ export class DonationService {
     const newDonation = new this.donationModel(createDonationDto);
     return newDonation.save();
   }
+
+  async findAll(): Promise<Donation[]> {
+    return this.donationModel
+      .find()
+      .populate('animalId')
+      .populate('donatedItems.itemId');
+  }
 }
