@@ -40,7 +40,7 @@ export class DonationService {
   ): Promise<{ animal: Animal; donations: Donation[] } | { message: string }> {
     const animal = await this.animalModel.findById(animalId);
 
-    if (!animal) throw new NotFoundException('Animal não encontrado');
+    if (!animal) throw new NotFoundException('Animal not found');
 
     const donations = await this.donationModel
       .find({ animalId })
@@ -48,12 +48,17 @@ export class DonationService {
       .lean();
 
     if (!donations.length) {
-      return { message: 'Nenhuma doação encontrada para este animal.' };
+      return { message: 'No donations found for this animal.' };
     }
 
     return {
       animal,
       donations,
     };
+  }
+
+  async remove(id: string): Promise<void> {
+    const result = await this.donationModel.findByIdAndDelete(id);
+    if (!result) throw new NotFoundException('Donation not found');
   }
 }

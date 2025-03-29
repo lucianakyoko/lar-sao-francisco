@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { DonationService } from './donation.service';
 import { CreateDonationDto } from './dto/create-donation.dto';
 import { Donation } from './schema/donation.schema';
@@ -30,5 +30,11 @@ export class DonationController {
     @Param('animalId') animalId: string,
   ): Promise<{ animal: Animal; donations: Donation[] } | { message: string }> {
     return this.donationService.findByAnimal(animalId);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<{ message: string }> {
+    await this.donationService.remove(id);
+    return { message: 'Donation removed successfully' };
   }
 }
