@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AnimalModule } from './animal/animal.module';
 import { NeedItemModule } from './need-item/need-item.module';
+import { DonationModule } from './donation/donation.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { NeedItemModule } from './need-item/need-item.module';
     MongooseModule.forRoot(process.env.MONGO_URI || ''),
     AnimalModule,
     NeedItemModule,
+    DonationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

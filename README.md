@@ -15,6 +15,7 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
 ## 📌 Recursos
 - Gerenciamento de animais (CRUD completo)
 - Lista de necessidades (needsList) de cada animal (CRUD completo)
+- Gerenciamento de Doações
 - API RESTful estruturada para facilitar a integração
 
 ---
@@ -50,7 +51,7 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
   ```
 #### Listar todos os animais
   - ```GET``` ```/api/v1/animal```
-  - Resposta (exemplo):
+  - Response (exemplo):
     ```
     [
       {
@@ -131,6 +132,77 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
 
 #### Remover um item da needsList
 - ```DELETE``` ```/api/v1/animal/:id/needs/:needId```
+
+---
+
+### Gerenciamento de ```donation```
+#### Adicionar uma doação
+  - ```POST``` ```/api/v1/donation```
+  - Request Body (exemplo):
+    ```
+    {
+      "donorName": "Carlos Silva",
+      "animalId": "67e71b4319010f44134c2b4d",
+      "donatedItems": [
+        { "itemId": "67e7f606e7cb1fc585003d86", "quantity": 2 },
+        { "itemId": "1217f606e7cb1fc585003d36", "quantity": 3 }
+      ],
+      "extraAmount": 100
+    }
+    ```
+
+#### Listar todas as doações
+- ```GET``` ```/api/v1/donation/```
+
+#### Obter detalhes de uma doação
+- ```GET``` ```/api/v1/donation/```
+
+#### Obter detalhes de uma doação por animal
+  - ```GET``` ```/api/v1/donation/```
+  -  Response (exemplo):
+    ```
+      {
+          "animal": {
+              "_id": "67e736725a2ca9429f526ec2",
+              "name": "Bob",
+              "birthDate": "2022-06-15T00:00:00.000Z",
+              "personality": "Brincalhão e carinhoso",
+              "size": "grande",
+              "vaccinated": true,
+              "neutered": true,
+              "needsList": [
+                  {
+                      "image": "https://exemplo.com.br/racao.jpg",
+                      "name": "Ração",
+                      "price": 150,
+                      "_id": "67e73a2b2522b23903e25dba"
+                  }
+              ],
+              "about": "Bob foi resgatado da rua e ama brincar com outros cachorros.",
+              "availableForAdoption": true,
+              "createdAt": "2025-03-28T19:54:22.513Z",
+              "updatedAt": "2025-03-29T00:09:15.801Z",
+              "__v": 5
+          },
+          "donations": [
+              {
+                  "_id": "67e84f85946b63e9d0596a09",
+                  "donorName": "Carlos Silva",
+                  "donatedItems": [
+                      {
+                          "itemId": "67e73a2b2522b23903e25dba",
+                          "quantity": 2
+                      }
+                  ],
+                  "extraAmount": 100,
+                  "createdAt": "2025-03-29T19:52:37.089Z"
+              }
+          ]
+      }
+    ```
+
+#### Remover uma doação
+- ```DELETE``` ```/api/v1/donation/```
 
 ---
 
