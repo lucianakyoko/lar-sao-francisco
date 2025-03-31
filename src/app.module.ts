@@ -7,6 +7,7 @@ import { AnimalModule } from './animal/animal.module';
 import { NeedItemModule } from './need-item/need-item.module';
 import { DonationModule } from './donation/donation.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UserModule } from './user/user.module';
     NeedItemModule,
     DonationModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
