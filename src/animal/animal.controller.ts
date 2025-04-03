@@ -30,7 +30,6 @@ export class AnimalController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<Animal | null> {
     return this.animalService.findOne(id);
   }
