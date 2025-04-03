@@ -37,34 +37,34 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
 ---
 
 ## 🔒 Rotas Protegidas
-  - Animal
-    ➡️ `POST` `/api/v1/animal`
-    ➡️ `PATCH` `/api/v1/animal/:id`
+  - Animal <br>
+    ➡️ `POST` `/api/v1/animal` <br>
+    ➡️ `PATCH` `/api/v1/animal/:id` <br>
     ➡️ `DELETE` `/api/v1/animal/:id`
 
-  - Need Item
-    ➡️ `POST` `/api/v1/animal/:id/needs`
-    ➡️ `PATCH` `/api/v1/animal/:id/needs/:needId`
+  - Need Item <br>
+    ➡️ `POST` `/api/v1/animal/:id/needs` <br>
+    ➡️ `PATCH` `/api/v1/animal/:id/needs/:needId` <br>
     ➡️ `DELETE` `/api/v1/animal/:id/needs/:needId`
   
-  - Donation 
-    ➡️ `GET` `/api/v1/donation`
-    ➡️ `GET` `/api/v1/donation/:id`
-    ➡️ `GET` `/api/v1/donation/animal/:animalId`
+  - Donation <br>
+    ➡️ `GET` `/api/v1/donation` <br>
+    ➡️ `GET` `/api/v1/donation/:id` <br>
+    ➡️ `GET` `/api/v1/donation/animal/:animalId` <br>
     ➡️ `DELETE` `/api/v1/donation/:id`
 
 ---
 
 ## 🔓 Rotas Públicas
-  - Animal
-    ➡️ `GET` `/api/v1/animal`
+  - Animal <br>
+    ➡️ `GET` `/api/v1/animal` <br>
     ➡️ `GET` `/api/v1/animal/:id`
 
-  - Need Item
-    ➡️ `GET` `/api/v1/animal/:id/needs`
+  - Need Item <br>
+    ➡️ `GET` `/api/v1/animal/:id/needs` <br>
     ➡️ `GET` `/api/v1/animal/:id/needs/:needId`
 
-  - Donation 
+  - Donation <br>
     ➡️ `POST` `/api/v1/donation`
 
 ---
