@@ -437,11 +437,14 @@ git clone https://github.com/lucianakyoko/lar-sao-francisco.git
   npm install
 ```
 
-3. Na raiz do projeto, crie o arquivo `.env` e adicione a variável de ambiente
+3. Na raiz do projeto, crie o arquivo `.env` e adicione as variáveis de ambiente
 
 ```
 //.env
-MONGO_URI=[variavel]
+MONGO_URI=[string de conexão]
+ADMIN_USERNAME=[nome de usuário]
+ADMIN_PASSWORD=[senha do usuário]
+JWT_SECRET=[chave para assinar e verificar autenticidade]
 ```
 
 4. Inicie a aplicação
