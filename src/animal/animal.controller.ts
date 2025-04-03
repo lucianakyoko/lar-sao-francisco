@@ -6,17 +6,20 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { AnimalService } from './animal.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { Animal } from './schema/animal.schema';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
+import { AuthGuard } from '../auth/guard/auth.guard';
 
 @Controller('animal')
 export class AnimalController {
   constructor(private readonly animalService: AnimalService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   async create(@Body() createAnimalDto: CreateAnimalDto): Promise<Animal> {
     return this.animalService.create(createAnimalDto);
   }
@@ -32,6 +35,7 @@ export class AnimalController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
   async update(
     @Param('id') id: string,
     @Body() updateAnimalDto: UpdateAnimalDto,
@@ -40,6 +44,7 @@ export class AnimalController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   async delete(@Param('id') id: string): Promise<Animal> {
     return this.animalService.delete(id);
   }

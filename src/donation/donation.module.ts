@@ -4,6 +4,8 @@ import { DonationController } from './donation.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Donation, DonationSchema } from './schema/donation.schema';
 import { Animal, AnimalSchema } from '../animal/schema/animal.schema';
+import { AuthModule } from '../auth/auth.module';
+import { AuthGuard } from '../auth/guard/auth.guard';
 
 @Module({
   imports: [
@@ -11,8 +13,9 @@ import { Animal, AnimalSchema } from '../animal/schema/animal.schema';
       { name: Donation.name, schema: DonationSchema },
       { name: Animal.name, schema: AnimalSchema },
     ]),
+    AuthModule,
   ],
-  providers: [DonationService],
+  providers: [DonationService, AuthGuard],
   controllers: [DonationController],
 })
 export class DonationModule {}
