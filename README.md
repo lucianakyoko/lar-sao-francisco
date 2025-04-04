@@ -22,7 +22,8 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
 - Gerenciamento de Doações
 - API RESTful estruturada para facilitar a integração
 - Login e senha
-- Proteção de rotas privadas 
+- Proteção de rotas privadas
+- Upload e gerenciamento de imagens no Cloudinary (com suporte a múltiplas imagens por animal)
 
 ---
 
@@ -33,6 +34,10 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
 - Mongoose - ODM para MongoDB
 - JWT - Autenticação e troca segura de dados
 - bcryptjs - Hash de senha
+- Cloudinary – Armazenamento e gerenciamento de imagens na nuvem
+- Multer – Middleware para manipulação de uploads de arquivos (usado com Interceptors do NestJS)
+
+
 
 ---
 
@@ -91,7 +96,16 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
       { "image": "https://example.com/cama.jpg", "name": "Caminha confortável", "price": 120.00 }
     ],
     "about": "Bob foi resgatado da rua e ama brincar com outros cachorros.",
-    "availableForAdoption": true
+    "availableForAdoption": true,
+    "images": [
+      "https://link-da-imagem.com/imagem-1.jpg",
+      "https://link-da-imagem.com/imagem-2.jpg",
+      "https://link-da-imagem.com/imagem-3.jpg",
+      "https://link-da-imagem.com/imagem-4.jpg",
+      "https://link-da-imagem.com/imagem-5.jpg",
+    ],
+    "createdAt": "2025-04-04T14:32:56.946Z",
+    "updatedAt": "2025-04-04T14:32:56.946Z"
   }
 ```
 
@@ -112,6 +126,11 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
         "about": "Bob foi resgatado da rua e ama brincar com outros cachorros.",
         "availableForAdoption": true,
         "needsList": [],
+        "images": [
+          "https://link-da-imagem.com/imagem-1.jpg",
+          "https://link-da-imagem.com/imagem-2.jpg",
+          "https://link-da-imagem.com/imagem-3.jpg"
+        ],
         "createdAt": "2025-03-28T21:57:23.269Z",
         "updatedAt": "2025-03-28T21:57:23.269Z",
         "__v": 0
@@ -127,6 +146,7 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
         "needsList": [],
         "about": "Bob foi resgatado da rua e ama brincar com outros cachorros.",
         "availableForAdoption": true,
+        "images": [],
         "createdAt": "2025-03-28T19:54:22.513Z",
         "updatedAt": "2025-03-28T23:57:54.810Z",
         "__v": 4
@@ -163,6 +183,7 @@ API para gerenciar os animais resgatados e suas necessidades dentro da ONG Lar S
             "_id": "67e7f627e7cb1fc585003d8c"
         }
     ],
+    "images:[],
     "createdAt": "2025-03-28T21:57:23.269Z",
     "updatedAt": "2025-03-29T13:31:19.800Z",
     "__v": 2
@@ -445,6 +466,10 @@ MONGO_URI=[string de conexão]
 ADMIN_USERNAME=[nome de usuário]
 ADMIN_PASSWORD=[senha do usuário]
 JWT_SECRET=[chave para assinar e verificar autenticidade]
+
+CLOUDINARY_CLOUD_NAME=[seu_cloud_name]
+CLOUDINARY_API_KEY=[sua_api_key]
+CLOUDINARY_API_SECRET=[sua_api_secret]
 ```
 
 4. Inicie a aplicação

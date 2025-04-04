@@ -6,13 +6,16 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AnimalService } from './animal.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { Animal } from './schema/animal.schema';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
 import { AuthGuard } from '../auth/guard/auth.guard';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('animal')
 export class AnimalController {
@@ -20,8 +23,12 @@ export class AnimalController {
 
   @Post()
   @UseGuards(AuthGuard)
-  async create(@Body() createAnimalDto: CreateAnimalDto): Promise<Animal> {
-    return this.animalService.create(createAnimalDto);
+  @UseInterceptors(FilesInterceptor('images', 4))
+  async create(
+    @Body() createAnimalDto: CreateAnimalDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ): Promise<Animal> {
+    return this.animalService.create(createAnimalDto, files);
   }
 
   @Get()
@@ -36,11 +43,13 @@ export class AnimalController {
 
   @Patch(':id')
   @UseGuards(AuthGuard)
+  @UseInterceptors(FilesInterceptor('images', 4))
   async update(
     @Param('id') id: string,
     @Body() updateAnimalDto: UpdateAnimalDto,
-  ): Promise<Animal> {
-    return this.animalService.update(id, updateAnimalDto);
+    @UploadedFiles() images?: Express.Multer.File[],
+  ) {
+    return this.animalService.update(id, updateAnimalDto, images);
   }
 
   @Delete(':id')

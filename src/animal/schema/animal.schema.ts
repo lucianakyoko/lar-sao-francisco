@@ -38,6 +38,9 @@ export class Animal {
 
   @Prop({ required: true })
   availableForAdoption: boolean;
+
+  @Prop({ type: [String], default: [] })
+  images: string[];
 }
 
 export const AnimalSchema = SchemaFactory.createForClass(Animal);
