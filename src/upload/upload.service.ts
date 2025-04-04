@@ -6,6 +6,10 @@ import {
 } from 'cloudinary';
 import * as streamifier from 'streamifier';
 
+type CloudinaryDestroyResponse = {
+  result: 'ok' | 'not found';
+};
+
 @Injectable()
 export class UploadService {
   async uploadImage(file: Express.Multer.File): Promise<string> {
@@ -41,5 +45,21 @@ export class UploadService {
 
       streamifier.createReadStream(file.buffer).pipe(stream);
     });
+  }
+
+  async deleteImage(publicId: string): Promise<void> {
+    try {
+      const result = (await cloudinary.uploader.destroy(
+        publicId,
+      )) as CloudinaryDestroyResponse;
+
+      if (result.result !== 'ok') {
+        throw new Error(`Error deleting image. Result: ${result.result}`);
+      }
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error('Error deleting image in Cloudinary:', err.message);
+      throw new Error(err.message || 'Error deleting image');
+    }
   }
 }
