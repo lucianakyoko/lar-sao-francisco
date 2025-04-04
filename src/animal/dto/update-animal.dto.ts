@@ -8,7 +8,7 @@ import {
   ValidateNested,
   IsNumber,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class UpdateNeedItemDto {
   @IsOptional()
@@ -47,10 +47,12 @@ export class UpdateAnimalDto {
 
   @IsOptional()
   @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
   vaccinated?: boolean;
 
   @IsOptional()
   @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
   neutered?: boolean;
 
   @IsOptional()
@@ -65,5 +67,11 @@ export class UpdateAnimalDto {
 
   @IsOptional()
   @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
   availableForAdoption?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
 }

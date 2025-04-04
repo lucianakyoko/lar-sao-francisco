@@ -8,6 +8,7 @@ import { NeedItemModule } from './need-item/need-item.module';
 import { DonationModule } from './donation/donation.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
     DonationModule,
     UserModule,
     AuthModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -25,7 +27,7 @@ import { AuthModule } from './auth/auth.module';
 export class AppModule {
   constructor() {
     if (!process.env.MONGO_URI) {
-      throw new Error('A variável de ambiente MONGO_URI não está definida');
+      throw new Error('Environment variable MONGO_URI is not defined');
     }
   }
 }

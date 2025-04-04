@@ -9,7 +9,7 @@ import {
   IsNumber,
   IsOptional,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class NeedItemDto {
   @IsNotEmpty()
@@ -48,10 +48,12 @@ export class CreateAnimalDto {
 
   @IsNotEmpty()
   @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
   vaccinated: boolean;
 
   @IsNotEmpty()
   @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
   neutered: boolean;
 
   @IsOptional()
@@ -66,5 +68,11 @@ export class CreateAnimalDto {
 
   @IsNotEmpty()
   @IsBoolean()
+  @Transform(({ value }) => value === 'true' || value === true)
   availableForAdoption: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
 }
