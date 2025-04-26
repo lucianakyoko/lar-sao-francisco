@@ -6,6 +6,12 @@ import { CreateAnimalDto } from './dto/create-animal.dto';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
 import { UploadService } from '../upload/upload.service';
 
+type CreateAnimalResponse = {
+  success: boolean;
+  message: string;
+  data: Animal;
+};
+
 @Injectable()
 export class AnimalService {
   constructor(
@@ -28,7 +34,7 @@ export class AnimalService {
   async create(
     createAnimalDto: CreateAnimalDto,
     images?: Express.Multer.File[],
-  ): Promise<Animal> {
+  ): Promise<CreateAnimalResponse> {
     let uploadedImages: string[] = [];
 
     if (images && images.length > 0) {
@@ -42,7 +48,12 @@ export class AnimalService {
       images: uploadedImages,
     });
 
-    return newAnimal.save();
+    await newAnimal.save();
+    return {
+      success: true,
+      message: 'Animal cadastrado com sucesso!',
+      data: newAnimal,
+    };
   }
 
   async findAll(): Promise<Animal[]> {
