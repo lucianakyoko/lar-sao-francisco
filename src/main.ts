@@ -7,10 +7,10 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'http://localhost:5173/',
+      'http://localhost:5173',
       'https://lar-sao-francisco.vercel.app',
     ],
-    methods: 'GET,PATCH,POST,DELETE',
+    methods: 'GET,PATCH,POST,DELETE, OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
