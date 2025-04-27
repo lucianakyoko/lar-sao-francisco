@@ -16,6 +16,7 @@ import { Animal } from './schema/animal.schema';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { CreateAnimalResponse } from './animal.service';
 
 @Controller('animal')
 export class AnimalController {
@@ -27,7 +28,7 @@ export class AnimalController {
   async create(
     @Body() createAnimalDto: CreateAnimalDto,
     @UploadedFiles() files: Express.Multer.File[],
-  ): Promise<Animal> {
+  ): Promise<CreateAnimalResponse> {
     return this.animalService.create(createAnimalDto, files);
   }
 

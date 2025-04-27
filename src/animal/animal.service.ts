@@ -6,7 +6,7 @@ import { CreateAnimalDto } from './dto/create-animal.dto';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
 import { UploadService } from '../upload/upload.service';
 
-type CreateAnimalResponse = {
+export type CreateAnimalResponse = {
   success: boolean;
   message: string;
   data: Animal;
