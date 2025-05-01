@@ -15,7 +15,7 @@ import { AnimalService } from './animal.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
 import { Animal } from './schema/animal.schema';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreateAnimalResponse } from './animal.service';
 import { AuthGuard } from '../auth/guard/auth.guard';
 
@@ -25,19 +25,10 @@ export class AnimalController {
 
   @Post()
   @UseGuards(AuthGuard)
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'images', maxCount: 4 },
-      { name: 'itemImages', maxCount: 10 },
-    ]),
-  )
+  @UseInterceptors(FilesInterceptor('images', 4))
   async create(
     @Body('dto') createAnimalDtoString: string,
-    @UploadedFiles()
-    files: {
-      images?: Express.Multer.File[];
-      itemImages?: Express.Multer.File[];
-    },
+    @UploadedFiles() images: Express.Multer.File[],
   ): Promise<CreateAnimalResponse> {
     let createAnimalDto: CreateAnimalDto;
     try {
@@ -48,7 +39,6 @@ export class AnimalController {
       throw new BadRequestException('Invalid DTO format');
     }
 
-    // Validar o DTO (opcional, se usar class-validator)
     if (
       !createAnimalDto.name ||
       !createAnimalDto.birthDate ||
@@ -59,11 +49,7 @@ export class AnimalController {
       throw new BadRequestException('Missing required fields in DTO');
     }
 
-    return this.animalService.create(
-      createAnimalDto,
-      files.images || [],
-      files.itemImages || [],
-    );
+    return this.animalService.create(createAnimalDto, images || []);
   }
 
   @Get()
@@ -78,20 +64,11 @@ export class AnimalController {
 
   @Patch(':id')
   @UseGuards(AuthGuard)
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'images', maxCount: 4 },
-      { name: 'itemImages', maxCount: 10 },
-    ]),
-  )
+  @UseInterceptors(FilesInterceptor('images', 4))
   async update(
     @Param('id') id: string,
     @Body('dto') updateAnimalDtoString: string,
-    @UploadedFiles()
-    files: {
-      images?: Express.Multer.File[];
-      itemImages?: Express.Multer.File[];
-    },
+    @UploadedFiles() images: Express.Multer.File[],
   ): Promise<Animal> {
     let updateAnimalDto: UpdateAnimalDto;
     try {
@@ -102,12 +79,7 @@ export class AnimalController {
       throw new BadRequestException('Invalid DTO format');
     }
 
-    return this.animalService.update(
-      id,
-      updateAnimalDto,
-      files.images || [],
-      files.itemImages || [],
-    );
+    return this.animalService.update(id, updateAnimalDto, images || []);
   }
 
   @Delete(':id')

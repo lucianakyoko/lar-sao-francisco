@@ -34,29 +34,13 @@ export class AnimalService {
   async create(
     createAnimalDto: CreateAnimalDto,
     images?: Express.Multer.File[],
-    itemImages?: Express.Multer.File[],
   ): Promise<CreateAnimalResponse> {
     let uploadedImages: string[] = [];
-    let uploadedItemImages: string[] = [];
 
     // Upload de imagens do animal
     if (images && images.length > 0) {
       uploadedImages = await Promise.all(
         images.map((file) => this.uploadService.uploadImage(file)),
-      );
-    }
-
-    // Upload de imagens dos itens
-    if (itemImages && itemImages.length > 0 && createAnimalDto.needsList) {
-      uploadedItemImages = await Promise.all(
-        itemImages.map((file) => this.uploadService.uploadImage(file)),
-      );
-      // Associar imagens aos itens
-      createAnimalDto.needsList = createAnimalDto.needsList.map(
-        (item, index) => ({
-          ...item,
-          image: uploadedItemImages[index] || item.image,
-        }),
       );
     }
 
@@ -90,7 +74,6 @@ export class AnimalService {
     id: string,
     updateAnimalDto: UpdateAnimalDto,
     images?: Express.Multer.File[],
-    itemImages?: Express.Multer.File[],
   ): Promise<Animal> {
     const animal = await this.animalModel.findById(id).exec();
 
@@ -117,32 +100,6 @@ export class AnimalService {
         ...updateAnimalDto,
         images: uploadedImages,
       };
-    }
-
-    // Deletar imagens antigas dos itens, se novas forem fornecidas
-    if (itemImages && itemImages.length > 0 && updateAnimalDto.needsList) {
-      await Promise.all(
-        animal.needsList.map(async (item) => {
-          if (item.image) {
-            const publicId = this.extractPublicId(item.image);
-            if (publicId) {
-              await this.uploadService.deleteImage(publicId);
-            }
-          }
-        }),
-      );
-
-      const uploadedItemImages = await Promise.all(
-        itemImages.map((file) => this.uploadService.uploadImage(file)),
-      );
-
-      // Associar novas imagens aos itens
-      updateAnimalDto.needsList = updateAnimalDto.needsList.map(
-        (item, index) => ({
-          ...item,
-          image: uploadedItemImages[index] || item.image,
-        }),
-      );
     }
 
     const updatedAnimal = await this.animalModel
@@ -174,7 +131,7 @@ export class AnimalService {
       );
     }
 
-    // Deletar imagens dos itens
+    // Deletar imagens dos itens, se necessário
     if (animal.needsList && animal.needsList.length > 0) {
       await Promise.all(
         animal.needsList.map(async (item) => {
