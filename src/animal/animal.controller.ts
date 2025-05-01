@@ -24,12 +24,23 @@ export class AnimalController {
 
   @Post()
   @UseGuards(AuthGuard)
-  @UseInterceptors(FilesInterceptor('images', 4))
+  @UseInterceptors(
+    FilesInterceptor('images', 4),
+    FilesInterceptor('itemImages', 10),
+  )
   async create(
     @Body() createAnimalDto: CreateAnimalDto,
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles()
+    files: {
+      images?: Express.Multer.File[];
+      itemImages?: Express.Multer.File[];
+    },
   ): Promise<CreateAnimalResponse> {
-    return this.animalService.create(createAnimalDto, files);
+    return this.animalService.create(
+      createAnimalDto,
+      files.images,
+      files.itemImages,
+    );
   }
 
   @Get()
@@ -44,13 +55,25 @@ export class AnimalController {
 
   @Patch(':id')
   @UseGuards(AuthGuard)
-  @UseInterceptors(FilesInterceptor('images', 4))
+  @UseInterceptors(
+    FilesInterceptor('images', 4),
+    FilesInterceptor('itemImages', 10),
+  )
   async update(
     @Param('id') id: string,
     @Body() updateAnimalDto: UpdateAnimalDto,
-    @UploadedFiles() images?: Express.Multer.File[],
+    @UploadedFiles()
+    files: {
+      images?: Express.Multer.File[];
+      itemImages?: Express.Multer.File[];
+    },
   ) {
-    return this.animalService.update(id, updateAnimalDto, images);
+    return this.animalService.update(
+      id,
+      updateAnimalDto,
+      files.images,
+      files.itemImages,
+    );
   }
 
   @Delete(':id')
