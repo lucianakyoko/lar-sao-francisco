@@ -16,7 +16,7 @@ import { CreateAnimalDto } from './dto/create-animal.dto';
 import { Animal } from './schema/animal.schema';
 import { UpdateAnimalDto } from './dto/update-animal.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { CreateAnimalResponse } from './animal.service';
+import { CreateAnimalResponse, DeleteAnimalResponse } from './animal.service';
 import { AuthGuard } from '../auth/guard/auth.guard';
 
 @Controller('animal')
@@ -84,7 +84,7 @@ export class AnimalController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  async delete(@Param('id') id: string): Promise<Animal> {
+  async delete(@Param('id') id: string): Promise<DeleteAnimalResponse> {
     return this.animalService.delete(id);
   }
 }

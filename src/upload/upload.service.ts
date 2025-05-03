@@ -12,6 +12,30 @@ type CloudinaryDestroyResponse = {
 
 @Injectable()
 export class UploadService {
+  constructor() {
+    // Verificar configuração do Cloudinary
+    const requiredEnvVars = [
+      'CLOUDINARY_CLOUD_NAME',
+      'CLOUDINARY_API_KEY',
+      'CLOUDINARY_API_SECRET',
+    ];
+    const missingVars = requiredEnvVars.filter(
+      (varName) => !process.env[varName],
+    );
+    if (missingVars.length > 0) {
+      console.error(
+        `Variáveis de ambiente faltando: ${missingVars.join(', ')}`,
+      );
+      throw new Error('Configuração do Cloudinary incompleta');
+    }
+
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+  }
+
   async uploadImage(file: Express.Multer.File): Promise<string> {
     if (!file?.buffer) {
       throw new InternalServerErrorException('Invalid file or missing buffer.');
@@ -25,16 +49,18 @@ export class UploadService {
           result: UploadApiResponse | undefined,
         ) => {
           if (error) {
-            console.error('Error on Cloudinary:', error);
+            console.error('Erro ao fazer upload para o Cloudinary:', error);
             return reject(
-              new InternalServerErrorException('Error uploading image.'),
+              new InternalServerErrorException(
+                'Erro ao fazer upload da imagem.',
+              ),
             );
           }
 
           if (!result?.secure_url) {
             return reject(
               new InternalServerErrorException(
-                'Upload failed. No URL returned.',
+                'Upload falhou. Nenhuma URL retornada.',
               ),
             );
           }
@@ -54,12 +80,13 @@ export class UploadService {
       )) as CloudinaryDestroyResponse;
 
       if (result.result !== 'ok') {
-        throw new Error(`Error deleting image. Result: ${result.result}`);
+        console.warn(
+          `Imagem não encontrada ou erro ao deletar: ${publicId}, resultado: ${result.result}`,
+        );
       }
     } catch (error: unknown) {
-      const err = error as Error;
-      console.error('Error deleting image in Cloudinary:', err.message);
-      throw new Error(err.message || 'Error deleting image');
+      console.error(`Erro ao deletar imagem ${publicId} no Cloudinary:`, error);
+      // Não lançar erro para não interromper a exclusão do animal
     }
   }
 }

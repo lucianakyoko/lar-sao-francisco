@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Animal, AnimalDocument } from './schema/animal.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,6 +16,12 @@ export type CreateAnimalResponse = {
   data: Animal;
 };
 
+export type DeleteAnimalResponse = {
+  success: boolean;
+  message: string;
+  data: Animal;
+};
+
 @Injectable()
 export class AnimalService {
   constructor(
@@ -20,15 +30,19 @@ export class AnimalService {
   ) {}
 
   private extractPublicId(url: string): string | null {
-    const parts = url.split('/');
-    const fileWithExtension = parts[parts.length - 1];
-    const folder = parts[parts.length - 2];
-
-    const [fileName] = fileWithExtension.split('.');
-
-    if (!folder || !fileName) return null;
-
-    return `${folder}/${fileName}`;
+    try {
+      // Exemplo de URL: https://res.cloudinary.com/<cloud_name>/image/upload/v<version>/animals/<file>.jpg
+      const regex = /\/image\/upload\/v\d+\/(animals\/[^.]+)\./;
+      const match = url.match(regex);
+      if (!match) {
+        console.warn(`URL inválida para extração de publicId: ${url}`);
+        return null;
+      }
+      return match[1]; // Retorna "animals/<file>"
+    } catch (error) {
+      console.error(`Erro ao extrair publicId de ${url}:`, error);
+      return null;
+    }
   }
 
   async create(
@@ -37,7 +51,6 @@ export class AnimalService {
   ): Promise<CreateAnimalResponse> {
     let uploadedImages: string[] = [];
 
-    // Upload de imagens do animal
     if (images && images.length > 0) {
       uploadedImages = await Promise.all(
         images.map((file) => this.uploadService.uploadImage(file)),
@@ -113,39 +126,47 @@ export class AnimalService {
     return updatedAnimal;
   }
 
-  async delete(id: string): Promise<Animal> {
-    const animal = await this.animalModel.findById(id).exec();
-    if (!animal) {
-      throw new NotFoundException('Animal not found');
-    }
+  async delete(id: string): Promise<DeleteAnimalResponse> {
+    try {
+      // Validar ID
+      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        throw new NotFoundException('ID inválido');
+      }
 
-    // Deletar imagens do animal
-    if (animal.images && animal.images.length > 0) {
-      await Promise.all(
-        animal.images.map(async (url) => {
-          const publicId = this.extractPublicId(url);
-          if (publicId) {
-            await this.uploadService.deleteImage(publicId);
-          }
-        }),
-      );
-    }
+      // Buscar animal
+      const animal = await this.animalModel.findById(id).exec();
+      if (!animal) {
+        throw new NotFoundException('Animal não encontrado');
+      }
 
-    // Deletar imagens dos itens, se necessário
-    if (animal.needsList && animal.needsList.length > 0) {
-      await Promise.all(
-        animal.needsList.map(async (item) => {
-          if (item.image) {
-            const publicId = this.extractPublicId(item.image);
+      // Deletar imagens do animal (hospedadas no Cloudinary)
+      if (animal.images && animal.images.length > 0) {
+        await Promise.all(
+          animal.images.map(async (url) => {
+            const publicId = this.extractPublicId(url);
             if (publicId) {
               await this.uploadService.deleteImage(publicId);
             }
-          }
-        }),
-      );
-    }
+          }),
+        );
+      }
 
-    await animal.deleteOne();
-    return animal;
+      // Não é necessário deletar imagens do needsList, pois são URLs externas
+
+      // Deletar o animal
+      await this.animalModel.findByIdAndDelete(id).exec();
+
+      return {
+        success: true,
+        message: 'Animal deletado com sucesso!',
+        data: animal,
+      };
+    } catch (error) {
+      console.error('Erro ao deletar animal:', error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Erro interno ao deletar animal');
+    }
   }
 }
