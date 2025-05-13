@@ -40,9 +40,9 @@ export class CreateAnimalDto {
   personality: string;
 
   @IsNotEmpty()
-  @IsEnum(['pequeno', 'médio', 'grande'], {
+  @IsEnum(['pequeno', 'medio', 'grande'], {
     message:
-      'size must be one of the following values: pequeno, médio or grande',
+      'size must be one of the following values: pequeno, medio or grande',
   })
   size: string;
 

@@ -21,7 +21,7 @@ export class Animal {
   @Prop({ required: true })
   personality: string;
 
-  @Prop({ required: true, enum: ['pequeno', 'médio', 'grande'] })
+  @Prop({ required: true, enum: ['pequeno', 'medio', 'grande'] })
   size: string;
 
   @Prop({ required: true })
