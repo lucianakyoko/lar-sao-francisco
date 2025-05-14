@@ -6,7 +6,7 @@ import {
   IsArray,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 class DonatedItemDto {
   @IsMongoId()
@@ -30,6 +30,14 @@ export class CreateDonationDto {
   donatedItems: DonatedItemDto[];
 
   @IsOptional()
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      const clean = value.replace(/[^0-9,.-]/g, '').replace(',', '.');
+      return parseFloat(clean);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return value;
+  })
   @IsNumber()
   extraAmount?: number;
 }
